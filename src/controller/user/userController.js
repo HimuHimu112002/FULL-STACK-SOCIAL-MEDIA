@@ -1,20 +1,14 @@
+const { passwordValidationLength } = require("../../helper/passwordValidation");
+const { validationLength } = require("./userNameValidation");
 const userModel = require("../../models/userModel");
-const { userService } = require("../../sevices/userServices/userSevice");
 const emailVelidation = require("../../utility/emailValidation");
-const userValid = require("./userValidation");
-
+const bcrypt = require("bcryptjs");
+const validationUserName = require("./userValidation");
 const userCreate = async (req, res) => {
-  //userValid(req.body)
-  // return res.status(400).json({
-  //   message: "hello"
-  // })
-  // let result = await userService(req);
-  // return res.status(400).json(result);
   try {
     const {
       FirstName,
       lastName,
-      UserName,
       email,
       password,
       birthdayMonth,
@@ -26,7 +20,6 @@ const userCreate = async (req, res) => {
     if (
       !FirstName ||
       !lastName ||
-      !UserName ||
       !email ||
       !password ||
       !birthdayMonth ||
@@ -38,6 +31,14 @@ const userCreate = async (req, res) => {
       res.send({ error: "Please Complete The All User Field !" });
     } else if (!emailVelidation(email)) {
       res.send({ error: "Enter The Valid User Email !" });
+    } else if (!validationLength(FirstName, 2, 30)) {
+      return res.status(400).json({
+        message: "Name length should be minimum 4 and maximun 30",
+      });
+    } else if (!passwordValidationLength(password, 8, 12)) {
+      return res.status(400).json({
+        message: "Password length should be minimum 8 and maximun 12",
+      });
     } else {
       let findDuplicateEmail = await userModel.find({ email: email });
 
@@ -48,7 +49,6 @@ const userCreate = async (req, res) => {
       } else if (
         FirstName &&
         lastName &&
-        UserName &&
         email &&
         password &&
         birthdayMonth &&
@@ -57,12 +57,16 @@ const userCreate = async (req, res) => {
         gender &&
         relagion
       ) {
+        let tempUserName = FirstName + lastName;
+        let finalUserName = await validationUserName(tempUserName);
+        const passHash = await bcrypt.hash(password, 10);
         let userinfo = new userModel({
           FirstName,
           lastName,
-          UserName,
+          FullName: tempUserName,
+          UserName: finalUserName,
           email,
-          password,
+          password: passHash,
           birthdayMonth,
           birthdayDay,
           birthdayYear,

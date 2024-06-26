@@ -15,7 +15,11 @@ const UserModel = new Schema({
   },
   UserName: {
     type: String,
-    require: true,
+    trim: true,
+    text: true,
+  },
+  FullName: {
+    type: String,
     trim: true,
     text: true,
   },
