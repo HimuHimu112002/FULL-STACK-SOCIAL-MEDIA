@@ -1,18 +1,16 @@
-const userModel = require("../../models/userModel");
+//const userModel = require("../../models/userModel");
 
 // function userValid(...val) {
 //   val.map((item) => {
 //     if (!item.FirstName) {
-//       console.log("hhhh", item.FirstName);
-//       // return { status: "fail", message: "First name require" };
-//       return false;
+//       return { status: "fail", message: "First name require" };
 //     }
 //   });
 // }
 // module.exports = userValid;
 
-const validationUserName = async (username)=>{
-  username += (+new Date() * Math.random()).toString().substring(0,1)
+const validationUserName = async (username) => {
+  username += (+new Date() * Math.random()).toString().substring(0, 1);
   // let isTrue = false
   // do{
   //   let user = await userModel.findOne({UserName: username})
@@ -23,6 +21,6 @@ const validationUserName = async (username)=>{
   //     isTrue = false
   //   }
   // }while(isTrue)
-    return username
-}
-module.exports = validationUserName
+  return username;
+};
+module.exports = validationUserName;

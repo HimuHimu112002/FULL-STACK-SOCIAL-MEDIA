@@ -4,6 +4,7 @@ const userModel = require("../../models/userModel");
 const emailVelidation = require("../../utility/emailValidation");
 const bcrypt = require("bcryptjs");
 const validationUserName = require("./userValidation");
+const { jwToken } = require("../../helper/token");
 const userCreate = async (req, res) => {
   try {
     const {
@@ -57,7 +58,7 @@ const userCreate = async (req, res) => {
         gender &&
         relagion
       ) {
-        let tempUserName = FirstName + lastName;
+        let tempUserName = `${FirstName}:${lastName}`;
         let finalUserName = await validationUserName(tempUserName);
         const passHash = await bcrypt.hash(password, 10);
         let userinfo = new userModel({

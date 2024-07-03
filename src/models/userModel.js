@@ -100,6 +100,10 @@ const UserModel = new Schema({
       ref: "usermodel",
     },
   ],
+  verified:{
+    type: Boolean,
+    default: false
+  },
   search: [
     {
       user: {
